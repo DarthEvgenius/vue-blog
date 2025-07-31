@@ -1,10 +1,25 @@
 <template>
   <v-container max-width="1200" class="pa-2">
     <v-card v-if="post" outlined>
-      <v-card-title class="text-h5">
+      <v-card-title class="d-flex justify-space-between align-center">
         <h1>
           {{ post.title }}
         </h1>
+
+         <v-tooltip location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn
+              color="error"
+              variant="text"
+              v-bind="props"
+              @click="deletePost"
+              prepend-icon="mdi-delete"
+            >
+              Удалить пост
+            </v-btn>
+          </template>
+          <span>Удалить этот пост</span>
+        </v-tooltip>
       </v-card-title>
 
       <v-card-subtitle class="text-subtitle-1 mb-3">
@@ -51,6 +66,7 @@ import CommentList from '@/components/comment/CommentList.vue'
 import AddCommentForm from '@/components/comment/AddCommentForm.vue'
 
 const route = useRoute()
+const router = useRouter()
 const postsStore = usePostsStore()
 
 const postId = Number(route.params.postId)
@@ -71,6 +87,19 @@ const formattedDate = computed(() => {
     minute: '2-digit',
   })
 })
+
+const deletePost = async () => {
+  if (!confirm('Вы уверены, что хотите удалить этот пост?')) return
+
+  try {
+    await postsStore.deletePost(postId)
+    await postsStore.getAllPosts()
+    router.push({ name: 'Home' })
+  } catch (error) {
+    console.error('Ошибка при удалении поста:', error)
+    alert('Не удалось удалить пост')
+  }
+}
 
 </script>
 

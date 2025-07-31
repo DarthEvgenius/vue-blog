@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import api from '@/api/http'
 import { usePostsStore } from '@/stores/postsStore'
 
@@ -90,7 +90,6 @@ async function submitComment() {
   loading.value = true
 
   try {
-    // Формируем тело запроса с полями из формы
     const body = {
       userInfo: newComment.value.userInfo,
       email: newComment.value.email,
@@ -105,10 +104,8 @@ async function submitComment() {
       }
     )
 
-    // После успешной отправки - обновим комментарии
     await postsStore.getAllPosts()
 
-    // Сброс формы
     newComment.value.userInfo = ''
     newComment.value.email = ''
     newComment.value.textComment = ''

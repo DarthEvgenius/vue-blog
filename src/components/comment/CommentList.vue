@@ -13,24 +13,12 @@
         </v-list-item>
       </template>
 
-      <v-list-item
+      <CommentItem
+        v-else
         v-for="comment in sortedComments"
         :key="comment.id"
-      >
-        <v-list-item-title>
-          {{ comment.userInfo }} <small class="text-grey">&lt;{{ comment.email }}&gt;</small>
-        </v-list-item-title>
-
-        <p>
-          {{ comment.textComment }}
-        </p>
-
-        <v-list-item-subtitle
-          class="text-caption grey--text"
-        >
-          {{ formatCommentDate(comment.dateTime) }}
-        </v-list-item-subtitle>
-      </v-list-item>
+        :comment="comment"
+      />
     </v-list>
   </div>
 </template>
@@ -38,6 +26,7 @@
 <script setup lang='ts'>
 import { computed } from 'vue'
 import { IPost } from '@/types/postTypes'
+import CommentItem from './CommentItem.vue'
 
 const { post } = defineProps<{
   post: IPost
@@ -51,15 +40,15 @@ const sortedComments = computed(() => {
   )
 })
 
-function formatCommentDate(dateString: string) {
-  const date = new Date(dateString)
-  return date.toLocaleString('ru-RU', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
+// function formatCommentDate(dateString: string) {
+//   const date = new Date(dateString)
+//   return date.toLocaleString('ru-RU', {
+//     year: 'numeric',
+//     month: 'short',
+//     day: 'numeric',
+//     hour: '2-digit',
+//     minute: '2-digit',
+//   })
+// }
 </script>
 

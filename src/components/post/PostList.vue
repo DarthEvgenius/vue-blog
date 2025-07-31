@@ -9,10 +9,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps } from 'vue'
+import { defineProps } from 'vue'
 import PostItem from '@/components/post/PostItem.vue'
 import type { IPost } from '@/types/postTypes';
-
 
 const { posts } =  defineProps<{ posts: IPost[] }>()
 
