@@ -78,6 +78,9 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import api from '@/api/http'
+  import { usePostsStore } from '@/stores/postsStore'
+
+  const postsStore = usePostsStore()
 
   const dialog = ref(false)
   const formRef = ref()
@@ -98,7 +101,9 @@
     const { valid } = await formRef.value.validate()
 
     if (valid) {
-      createBlog()
+      await createBlog()
+      await postsStore.fetchAllUserInfo()
+      
       formRef.value.reset()
       closeDialog()
     }

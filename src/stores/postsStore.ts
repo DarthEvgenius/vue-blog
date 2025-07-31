@@ -17,7 +17,7 @@ export const usePostsStore = defineStore('posts', {
       try {
         const response = await api.get<IUserInfo[]>('/userInfo/findAll')
         this.users = response.data
-        console.log('users form store:', response.data)
+        console.log('fetch users in store:', response.data)
         
         return response.data
       } catch (error) {
@@ -26,20 +26,20 @@ export const usePostsStore = defineStore('posts', {
       }
     },
 
-
-
     async getAllPosts() {
       try {
         const allUserInfo = await this.fetchAllUserInfo()
-        
-        this.posts = allUserInfo.flatMap(user =>
+
+        const newPosts = allUserInfo.flatMap(user =>
           user.post.map(post => ({
             ...post,
             userInfoId: user.id
           }))
         )
 
-        return this.sortPosts(this.posts)
+        this.posts = this.sortPosts(newPosts)
+
+        return this.posts
       } catch (error) {
         console.error('Failed to get all posts:', error)
         throw error

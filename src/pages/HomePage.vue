@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Все записи в блоге</h1>
+    <h1>Все записи</h1>
 
     <UserList />
 
@@ -18,12 +18,15 @@ import { useRouter } from 'vue-router'
 import { usePostsStore } from '@/stores/postsStore'
 import PostList from '@/components/post/PostList.vue'
 import UserList from '@/components/user/UserList.vue'
-import { ref } from 'vue'
+import { computed } from 'vue'
+import { IPost } from '@/types/postTypes'
 
 const postsStore = usePostsStore()
 const router = useRouter()
 
-const posts = ref<any>([])
+const posts = computed<IPost[]>(() => {
+  return postsStore.posts
+})
 
 const goToAuthor = (authorId: number) => {
   router.push({ name: 'UserPage', params: { userId: authorId }})
@@ -34,7 +37,7 @@ const goToPost = (postId: number) => {
 }
 
 onMounted(async () => {
-  posts.value = await postsStore.getAllPosts()
+  await postsStore.getAllPosts()
 })
 </script>
 

@@ -5,8 +5,9 @@
 
       <v-spacer></v-spacer>
 
-      <div v-if="authStore.isAuthenticated">
+      <div v-if="authStore.isAuthenticated" class="d-flex">
         <UserCreateDialog />
+        <PostCreateDialog />
       </div>
 
       <v-btn
@@ -27,7 +28,8 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/authStore'
 import { ref } from 'vue'
-import UserCreateDialog from '@/components/user/UserCreateDialog.vue'
+import PostCreateDialog from './components/post/PostCreateDialog.vue'
+import UserCreateDialog from './components/user/UserCreateDialog.vue'
 
 const authStore = useAuthStore()
 const theme = ref('light')

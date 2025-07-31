@@ -7,7 +7,7 @@ export interface IPost {
   fullDescription: string
   dateTime: string
   userInfoId?: number
-  comments?: IComment[]
+  comments: IComment[]
 }
 
 export type TPostCreate = Pick<IPost, 'title' | 'briefDescription' | 'fullDescription'>

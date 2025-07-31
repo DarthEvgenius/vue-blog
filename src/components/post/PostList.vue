@@ -16,7 +16,7 @@ import PostItem from '@/components/post/PostItem.vue'
 import type { IPost } from '@/types/postTypes';
 
 
-const props = defineProps<{ posts: IPost[] }>()
+const { posts } =  defineProps<{ posts: IPost[] }>()
 
 const emit = defineEmits<{
   (e: 'click:author', authorId: number): void,

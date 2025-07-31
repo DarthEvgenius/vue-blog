@@ -10,14 +10,16 @@
 
 <script setup lang='ts'>
 import { usePostsStore } from '@/stores/postsStore'
-import { onMounted, ref } from 'vue'
+import { IUserInfo } from '@/types/userTypes'
+import { computed } from 'vue'
 
 const postsStore = usePostsStore()
-const users = ref<any>([])
 
-onMounted(async () => {
-  users.value = await postsStore.fetchAllUserInfo()
+const users = computed<IUserInfo[]>(() => {
+  return postsStore.users
 })
+
+
 </script>
 
 <style module lang='scss'>
