@@ -7,6 +7,7 @@
           <v-card-text>
             <AuthForm />
           </v-card-text>
+          
         </v-card>
     </v-row>
   </v-container>

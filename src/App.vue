@@ -1,21 +1,29 @@
 <template>
-  <v-app>
-    <v-app-bar app color="primary" dark>
+  <v-app :theme="theme">
+    <v-app-bar app color="primary">
       <v-toolbar-title>Vue Blog</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
       <div v-if="authStore.isAuthenticated">
-        Привет, {{ authStore.username }}
+        <v-btn @click="createBlog" class="ml-4">
+          Создать блог
+        </v-btn>
 
         <v-btn @click="authStore.logout()" class="ml-4">
           Выйти
         </v-btn>
       </div>
+
+      <v-btn
+          :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+          slim
+          @click="onClick"
+        ></v-btn>
     </v-app-bar>
 
-    <v-main class="grey lighten-3">
-      <v-container fluid class="pa-0 ma-0 fill-height">
+    <v-main>
+      <v-container fluid class="px-10 fill-height">
             <router-view></router-view>
       </v-container>
     </v-main>
@@ -24,7 +32,38 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/authStore'
+import { ref } from 'vue'
+import api from '@/api/http'
+
 const authStore = useAuthStore()
+const theme = ref('light')
+
+async function createBlog() {
+  const username = authStore.user?.username
+
+  if (!username) {
+    console.error('No authenticated user')
+    return null
+  }
+  
+  try {
+    const response = await api.post('/userInfo', {
+      blogName: 'my blog',
+      fullName: username
+    })
+
+    console.log('Created:', response.data)
+
+    return response.data
+  } catch(e) {
+    console.warn('Error while create user', e)
+  }
+}
+
+function onClick () {
+  theme.value = theme.value === 'light' ? 'dark' : 'light'
+}
+
 </script>
 
 <style scoped>

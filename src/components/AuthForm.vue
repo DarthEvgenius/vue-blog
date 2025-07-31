@@ -2,7 +2,7 @@
 <v-form @submit.prevent="handleSubmit">
   <v-text-field
     v-model="username"
-    lagel="Логин"
+    label="Логин"
     required
   ></v-text-field>
 
@@ -32,21 +32,31 @@
 </template>
 
 <script setup lang='ts'>
-import { authService } from '@/api/auth'
 import { ref } from 'vue'
+import { authService } from '@/api/authApi'
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
 
-// const username = ref(import.meta.env.VITE_API_USERNAME)
-const username = ref('Prokofiev')
-
-// const password = ref(import.meta.env.VITE_API_PASSWORD)
-const password = ref('Sergei')
+const username = ref(import.meta.env.VITE_API_USERNAME)
+const password = ref(import.meta.env.VITE_API_PASSWORD)
 const loading = ref(false)
 const error = ref('')
 
+const router = useRouter()
+const authStore = useAuthStore()
+
 const handleSubmit = async() => {
+  loading.value = true
+  error.value = ''
+
   try {
-    loading.value = true
-    await authService.login(username.value, password.value)
+    const responseData = await authService.login(username.value, password.value)
+
+    console.log('response:', responseData)
+
+    authStore.setUser(responseData)
+
+    router.push('/')
   } catch(e) {
     error.value = 'Auth error, check login/password'
   } finally {
