@@ -1,0 +1,65 @@
+<template>
+  <div>
+    <h2 class="mt-6 mb-4">
+      Комментарии ({{ post.comments.length }})
+    </h2>
+
+    <v-list lines="two">
+      <template v-if="post.comments.length === 0">
+        <v-list-item>
+            <v-list-item-title class="grey--text text-center">
+              Комментариев пока нет
+            </v-list-item-title>
+        </v-list-item>
+      </template>
+
+      <v-list-item
+        v-for="comment in sortedComments"
+        :key="comment.id"
+      >
+        <v-list-item-title>
+          {{ comment.userInfo }} <small class="text-grey">&lt;{{ comment.email }}&gt;</small>
+        </v-list-item-title>
+
+        <p>
+          {{ comment.textComment }}
+        </p>
+
+        <v-list-item-subtitle
+          class="text-caption grey--text"
+        >
+          {{ formatCommentDate(comment.dateTime) }}
+        </v-list-item-subtitle>
+      </v-list-item>
+    </v-list>
+  </div>
+</template>
+
+<script setup lang='ts'>
+import { computed } from 'vue'
+import { IPost } from '@/types/postTypes'
+
+const { post } = defineProps<{
+  post: IPost
+}>()
+
+const sortedComments = computed(() => {
+  if (!post) return null
+  
+  return [...post.comments].sort(
+    (a, b) => new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime()
+  )
+})
+
+function formatCommentDate(dateString: string) {
+  const date = new Date(dateString)
+  return date.toLocaleString('ru-RU', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+</script>
+

@@ -17,7 +17,8 @@ export const usePostsStore = defineStore('posts', {
       try {
         const response = await api.get<IUserInfo[]>('/userInfo/findAll')
         this.users = response.data
-        console.log('fetch users in store:', response.data)
+        
+        // console.log('fetch users in store:', response.data)
         
         return response.data
       } catch (error) {

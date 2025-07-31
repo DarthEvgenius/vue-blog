@@ -6,7 +6,7 @@ export interface IPost {
   briefDescription: string
   fullDescription: string
   dateTime: string
-  userInfoId?: number
+  userInfoId: number
   comments: IComment[]
 }
 

@@ -6,8 +6,6 @@
 
     <PostList 
       :posts="posts" 
-      @click:authorId="goToAuthor" 
-      @click:postId="goToPost" 
     />
   </div>
 </template>
@@ -28,17 +26,7 @@ const posts = computed<IPost[]>(() => {
   return postsStore.posts
 })
 
-const goToAuthor = (authorId: number) => {
-  router.push({ name: 'UserPage', params: { userId: authorId }})
-}
 
-const goToPost = (postId: number) => {
-  router.push({ name: 'PostPage', params: { postId }})
-}
-
-onMounted(async () => {
-  await postsStore.getAllPosts()
-})
 </script>
 
 <style module lang='scss'>

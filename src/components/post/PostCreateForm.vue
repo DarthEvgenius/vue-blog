@@ -6,12 +6,13 @@
     <v-row dense>
       <v-col
         cols="12"
-
       >
         <v-select
-          v-model="userInfoId"
-          label="User Id"
-          :items="userIds"
+          v-model="selectedUser"
+          label="Автор"
+          :items="users"
+          item-title="fullName"
+          item-value="id"
           :rules="idRules"
           required
         ></v-select>
@@ -51,15 +52,24 @@
           required
         ></v-textarea>
       </v-col>
-    </v-row>
 
-    <v-row class="justify-end">
-      <v-btn
+      <v-col cols="6" >
+        <v-btn
+        color="primary"
+        text="Очистить"
+        variant="tonal"
+        @click="resetForm"
+      ></v-btn>
+      </v-col>
+
+      <v-col cols="6" class="d-flex justify-end">
+        <v-btn
         color="primary"
         text="Сохранить"
         variant="tonal"
         @click="createPost"
       ></v-btn>
+      </v-col>
     </v-row>
   </v-form>
 </template>
@@ -75,17 +85,26 @@ import { usePostsStore } from '@/stores/postsStore'
 
   const postsStore = usePostsStore()
 
-  const userIds = computed(() => {
-    return postsStore.users.map(u => u.id)
+  const users = computed(() => {
+    return postsStore.users
   })
 
   const formRef = ref()
   const isValidForm = ref<boolean | null>(false)
 
-  const userInfoId = ref()
+  const selectedUser = ref()
   const title = ref()
   const briefDescription = ref()
   const fullDescription = ref()
+
+  const userInfoId = computed(() => {
+    if(selectedUser.value) {
+      const match = selectedUser.value.match(/\(id-(\d+)\)/)
+      const id = match ? match[1] : null
+      return id
+    }
+    return 0
+  })
 
   const idRules = [
     (value: string) => {
@@ -127,6 +146,10 @@ import { usePostsStore } from '@/stores/postsStore'
     }
   ]
 
+  function resetForm() {
+    formRef.value.reset()
+  }
+
   async function createPost() {
     if (!formRef.value) return
     const { valid } = await formRef.value.validate()
@@ -135,7 +158,7 @@ import { usePostsStore } from '@/stores/postsStore'
       await savePost()
       await postsStore.getAllPosts()
       
-      formRef.value.reset()
+      resetForm()
       emit('postCreated')
     }
   }
@@ -163,6 +186,3 @@ import { usePostsStore } from '@/stores/postsStore'
   }
 </script>
 
-<style module lang='scss'>
-
-</style>
