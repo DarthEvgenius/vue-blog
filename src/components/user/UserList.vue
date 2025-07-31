@@ -1,11 +1,11 @@
 <template>
-<div>
+<v-card class="mb-3 pa-3 d-flex flex-column ga-2">
   Users:
 
-  <div v-for="user in users">
+  <v-card v-for="user in users" class="py-3">
     {{ user }}
-  </div>
-</div>
+  </v-card>
+</v-card>
 </template>
 
 <script setup lang='ts'>

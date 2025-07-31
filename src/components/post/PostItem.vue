@@ -11,7 +11,7 @@
     <p>
       Автор: 
       <span @click.stop="$emit('click:authorId', post.userInfoId)" style="color:blue; cursor:pointer;">
-        {{ post.userInfoId }}
+        {{ authorName }}
       </span>
     </p>
 
@@ -26,17 +26,23 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { computed, defineProps } from 'vue'
 import type { IPost } from '@/types/postTypes'
 import { usePostsStore } from '@/stores/postsStore'
 
 const postsStore = usePostsStore()
 
-const props = defineProps<{ post: IPost }>()
+const { post } = defineProps<{ post: IPost }>()
 
 console.log('users:', postsStore.users)
 console.log('posts:', postsStore.posts)
-const authorName = ''
+
+const authorName = computed(() => {
+  return postsStore.users.find(u => u.id === post.userInfoId)?.fullName
+})
+
+
+console.log('post author:', authorName.value)
 </script>
 
 <style scoped>
