@@ -32,20 +32,7 @@
       @click="toggleTheme"
     ></v-btn>
 
-    <v-navigation-drawer
-      v-model="drawer"
-      temporary
-      location="right"
-    >
-      <v-list>
-        <v-list-item>
-          <UserCreateDialog />
-        </v-list-item>
-        <v-list-item>
-          <PostDialog />
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+    
   </v-app-bar>
 </template>
 
@@ -58,9 +45,10 @@ import { ref } from 'vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
-const drawer = ref(false)
+
 
 const theme = defineModel('theme')
+const drawer = defineModel('drawer')
 
 function goToMain() {
   router.push({
