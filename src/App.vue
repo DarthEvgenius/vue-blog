@@ -2,23 +2,7 @@
   <v-app :theme="theme">
     <AppHeader
       v-model:theme="theme"
-      v-model:drawer="drawer"
-    />
-
-    <v-navigation-drawer
-      v-model="drawer"
-      temporary
-      location="right"
-    >
-      <v-list>
-        <v-list-item>
-          <UserCreateDialog />
-        </v-list-item>
-        <v-list-item>
-          <PostDialog />
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+      />
     
     <v-main>
       <v-container fluid class="px-10 fill-height">
@@ -32,12 +16,9 @@
 import { ref, onMounted } from 'vue'
 import { usePostsStore } from './stores/postsStore'
 import AppHeader from './components/AppHeader.vue'
-import UserCreateDialog from './components/user/UserCreateDialog.vue'
-import PostDialog from './components/post/PostDialog.vue'
 
 const postsStore = usePostsStore()
 const theme = ref('light')
-const drawer = ref(false)
 
 onMounted(async () => {
   try {

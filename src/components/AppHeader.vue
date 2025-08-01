@@ -34,6 +34,21 @@
 
     
   </v-app-bar>
+
+    <v-navigation-drawer
+      v-model="drawer"
+      temporary
+      location="right"
+    >
+      <v-list>
+        <v-list-item>
+          <UserCreateDialog />
+        </v-list-item>
+        <v-list-item>
+          <PostDialog />
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 </template>
 
 <script setup lang='ts'>
@@ -48,7 +63,11 @@ const authStore = useAuthStore()
 
 
 const theme = defineModel('theme')
-const drawer = defineModel('drawer')
+const drawer = ref(false)
+
+function toggleDrawer() {
+  drawer.value = !drawer.value
+}
 
 function goToMain() {
   router.push({
