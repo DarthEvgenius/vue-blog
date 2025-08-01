@@ -11,6 +11,7 @@
           :items="users"
           item-title="fullName"
           item-value="id"
+          return-object
           :rules="idRules"
           required
         ></v-select>
@@ -68,7 +69,7 @@
 <script setup lang='ts'>
   import { ref, computed } from 'vue'
   import api from '@/api/http'
-import { usePostsStore } from '@/stores/postsStore'
+  import { usePostsStore } from '@/stores/postsStore'
 
   const emit = defineEmits<{
     posted: []
@@ -88,19 +89,10 @@ import { usePostsStore } from '@/stores/postsStore'
   const briefDescription = ref()
   const fullDescription = ref()
 
-  const userInfoId = computed(() => {
-    if(selectedUser.value) {
-      const match = selectedUser.value.match(/\(id-(\d+)\)/)
-      const id = match ? match[1] : null
-      return id
-    }
-    return 0
-  })
-
   const idRules = [
     (value: string) => {
       if (value) return true
-      return 'Выберите id автора'
+      return 'Выберите автора'
     },
   ]
   
@@ -166,7 +158,7 @@ import { usePostsStore } from '@/stores/postsStore'
         '/post',
         body,
         {
-          params: { userInfoId: userInfoId.value }
+          params: { userInfoId: selectedUser.value.id }
         }
       )
 
