@@ -1,5 +1,5 @@
 <template>
-<div class="pa-4 text-center">
+<div class="text-center">
     <v-dialog
       v-model="dialog"
       max-width="600"
@@ -8,19 +8,26 @@
         <v-btn
           class="text-none font-weight-regular"
           prepend-icon="mdi-post"
-          text="Создать пост"
           variant="tonal"
+          :text="action==='create' ? 'Создать пост' : 'Редактировать пост'"
           v-bind="activatorProps"
         ></v-btn>
       </template>
 
       <v-card
         prepend-icon="mdi-account"
-        title="Новый пост"
+        title="Заполните поля:"
       >
         <v-card-text>
           <PostCreateForm
-            @post-created="closeDialog"
+            v-if="action === 'create'"
+            @posted="closeDialog"
+          />
+
+          <PostEditForm
+            v-else
+            :post="post!"
+            @posted="closeDialog"
           />
         </v-card-text>
 
@@ -37,14 +44,21 @@
 
         </v-card-actions>
       </v-card>
+
     </v-dialog>
   </div>
 </template>
 
 <script setup lang='ts'>
-  import PostCreateForm from './PostCreateForm.vue'
-
+  import { IPost } from '@/types/postTypes';
+import PostCreateForm from './PostCreateForm.vue'
+  import PostEditForm from './PostEditForm.vue'
   import { ref } from 'vue'
+
+  const { action='create', post } = defineProps<{
+    action?: 'create' | 'edit',
+    post?: IPost
+  }>()
 
   const dialog = ref(false)
   
@@ -53,6 +67,3 @@
   }
 </script>
 
-<style module lang='scss'>
-
-</style>

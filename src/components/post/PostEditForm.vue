@@ -5,18 +5,6 @@
   >
     <v-row dense>
       <v-col cols="12">
-        <v-select
-          v-model="selectedUser"
-          label="Автор*"
-          :items="users"
-          item-title="fullName"
-          item-value="id"
-          :rules="idRules"
-          required
-        ></v-select>
-      </v-col>
-
-      <v-col cols="12">
         <v-text-field
           v-model="title"
           :counter="50"
@@ -68,41 +56,26 @@
 <script setup lang='ts'>
   import { ref, computed } from 'vue'
   import api from '@/api/http'
-import { usePostsStore } from '@/stores/postsStore'
+  import { usePostsStore } from '@/stores/postsStore'
+  import { IPost } from '@/types/postTypes'
 
+  const { post } = defineProps<{
+    post: IPost
+  }>()
+  
   const emit = defineEmits<{
     posted: []
   }>()
 
   const postsStore = usePostsStore()
 
-  const users = computed(() => {
-    return postsStore.users
-  })
-
   const formRef = ref()
   const isValidForm = ref<boolean | null>(false)
 
-  const selectedUser = ref()
-  const title = ref()
-  const briefDescription = ref()
-  const fullDescription = ref()
+  const title = ref(post.title)
+  const briefDescription = ref(post.briefDescription)
+  const fullDescription = ref(post.fullDescription)
 
-  const userInfoId = computed(() => {
-    if(selectedUser.value) {
-      const match = selectedUser.value.match(/\(id-(\d+)\)/)
-      const id = match ? match[1] : null
-      return id
-    }
-    return 0
-  })
-
-  const idRules = [
-    (value: string) => {
-      if (value) return true
-      return 'Выберите id автора'
-    },
-  ]
   
   const titleRules = [
     (value: string) => {
@@ -158,21 +131,16 @@ import { usePostsStore } from '@/stores/postsStore'
     const body = {
       title: title.value,
       briefDescription: briefDescription.value,
-      fullDescription: fullDescription.value
+      fullDescription: fullDescription.value,
+      id: post.id
     }
 
     try {
-      const response = await api.post(
-        '/post',
-        body,
-        {
-          params: { userInfoId: userInfoId.value }
-        }
-      )
+      const response = await api.put('/post', body)
 
       return response.data
     } catch(e) {
-      console.warn('Error while create post', e)
+      console.warn('Error while edit post', e)
     }
   }
 </script>

@@ -1,26 +1,7 @@
 <template>
   <v-app :theme="theme">
-    <v-app-bar app color="primary">
-      <v-toolbar-title>
-        <a @click="goToMain" class="logo-btn">
-          Vue Blog
-        </a>
-      </v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-      <div v-if="authStore.isAuthenticated" class="create-buttons">
-        <UserCreateDialog />
-        <PostCreateDialog />
-      </div>
-
-      <v-btn
-          :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
-          slim
-          @click="onClick"
-        ></v-btn>
-    </v-app-bar>
-
+    <AppHeader v-model:theme="theme" />
+    
     <v-main>
       <v-container fluid class="px-10 fill-height">
             <router-view></router-view>
@@ -30,32 +11,22 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/authStore'
 import { ref, onMounted } from 'vue'
-import PostCreateDialog from './components/post/PostCreateDialog.vue'
-import UserCreateDialog from './components/user/UserCreateDialog.vue'
 import { usePostsStore } from './stores/postsStore'
-import { useRouter } from 'vue-router'
+import AppHeader from './components/AppHeader.vue'
 
-const router = useRouter()
-const authStore = useAuthStore()
 const postsStore = usePostsStore()
+
 const theme = ref('light')
 
-
 onMounted(async () => {
-  await postsStore.getAllPosts()
+  try {
+    await postsStore.getAllPosts()
+  } catch (error) {
+    console.error('Failed to load posts:', error)
+  }
 })
 
-function goToMain() {
-  router.push({
-    name: 'Home',
-  })
-}
-
-function onClick () {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-}
 </script>
 
 <style scoped>
@@ -74,9 +45,19 @@ function onClick () {
 
 .create-buttons {
   display: flex;
+  gap: 20px;
   
   @media (max-width: 650px) {
     display: none;
   }
 }
+
+.mobile-menu-btn {
+  display: none;
+  
+  @media (max-width: 650px) {
+    display: block;
+  }
+}
+
 </style>

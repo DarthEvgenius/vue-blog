@@ -6,20 +6,27 @@
           {{ post.title }}
         </h1>
 
-         <v-tooltip location="bottom">
-          <template v-slot:activator="{ props }">
-            <v-btn
-              color="error"
-              variant="text"
-              v-bind="props"
-              @click="deletePost"
-              prepend-icon="mdi-delete"
-            >
-              Удалить пост
-            </v-btn>
-          </template>
-          <span>Удалить этот пост</span>
-        </v-tooltip>
+        <div class="d-flex flex-column ga-3">
+          <PostDialog
+            action="edit"
+            :post="post"
+          />
+ 
+          <v-tooltip location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                class="text-none font-weight-regular"
+                color="error"
+                prepend-icon="mdi-delete"
+                variant="tonal"
+                text="Удалить пост"
+                v-bind="props"
+                @click="deletePost"
+              ></v-btn>
+            </template>
+            <span>Удалить этот пост</span>
+          </v-tooltip>
+        </div>
       </v-card-title>
 
       <v-card-subtitle class="text-subtitle-1 mb-3">
@@ -64,6 +71,7 @@ import type { IPost } from '@/types/postTypes'
 import { usePostsStore } from '@/stores/postsStore'
 import CommentList from '@/components/comment/CommentList.vue'
 import AddCommentForm from '@/components/comment/AddCommentForm.vue'
+import PostDialog from '@/components/post/PostDialog.vue'
 
 const route = useRoute()
 const router = useRouter()

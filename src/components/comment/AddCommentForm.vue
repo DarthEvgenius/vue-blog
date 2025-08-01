@@ -9,7 +9,7 @@
       <v-text-field
         v-model="newComment.userInfo"
         label="Имя"
-        :rules="[v => !!v || 'Имя обязательно']"
+        :rules="nameRules"
         required
         outlined
         dense
@@ -19,7 +19,6 @@
         v-model="newComment.email"
         label="Email"
         :rules="emailRules"
-        required
         outlined
         dense
       />
@@ -27,7 +26,7 @@
       <v-textarea
         v-model="newComment.textComment"
         label="Комментарий"
-        :rules="[v => !!v || 'Комментарий обязателен']"
+        :rules="textRules"
         required
         outlined
         dense
@@ -79,9 +78,34 @@ const newComment = ref<ICommentForm>({
   textComment: '',
 })
 
+
+
+const nameRules = [
+  (v: string) => !!v || 'Имя обязательно',
+  (v: string) => {
+    if (v?.length <= 50) return true
+    return 'Максимальная длина 50 символов.'
+  }
+]
+
 const emailRules = [
-  (v: string) => !!v || 'Email обязателен',
-  (v: string) => /^\S+@\S+\.\S+$/.test(v) || 'Некорректный email',
+  (v: string) => {
+    if (!v || v.length === 0) return true
+
+    return  /^\S+@\S+\.\S+$/.test(v) || 'Некорректный email'
+  },
+  (v: string) => {
+    if (v?.length <= 50) return true
+    return 'Максимальная длина 50 символов.'
+  }
+]
+
+const textRules = [
+  (v: string) => !!v || 'Комментарий обязателен',
+  (v: string) => {
+    if (v?.length <= 255) return true
+    return 'Максимальная длина 255 символов.'
+  }
 ]
 
 async function submitComment() {
