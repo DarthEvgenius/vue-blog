@@ -1,4 +1,4 @@
-# Vue 3 + TypeScript + Vite
+# Vue 3 + TypeScript + Vuetify + Vite
 
 ## How to start:
 - clone repo
